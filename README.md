@@ -22,39 +22,73 @@
 ```
 gmall-flink-3.0
 └── gmall-realtime   																	# 实时模块
-│   ├── pom.xml
-│   ├── src
-│   │   ├── main
-│   │   │   ├── java
-│   │   │   │   └── com
-│   │   │   │       └── atguigu
-│   │   │   │           ├── app
-│   │   │   │           │   ├── dim
-│   │   │   │           │   │   └── DimApp.java
-│   │   │   │           │   ├── dwd
-│   │   │   │           │   │   ├── db
-│   │   │   │           │   │   └── log
-│   │   │   │           │   ├── dws
-│   │   │   │           │   └── func
-│   │   │   │           ├── bean
-│   │   │   │           ├── common
-│   │   │   │           └── utils
-│   │   │   └── resources
-│   │   │       ├── hbase-site.xml									# hbase配置文件
-│   │   │       └── log4j.properties								# flink日志打印配置文件 
-│   │   └── test
-│   │       └── java
-│   └── target
-│       ├── classes
-│       │   ├── com
-│       │   │   └── atguigu
-│       │   │       └── app
-│       │   │           └── dim
-│       │   │               └── DimApp.class
-│       │   ├── hbase-site.xml
-│       │   └── log4j.properties	
-│       └── generated-sources
-│           └── annotations
-└── pom.xml
+
 ```
+
+
+
+# 数仓分层后每层的编程逻辑
+
+## DIM层编程
+
+1、消费kafka topic_db主题数据（包含所有的业务表数据）
+
+2、过滤维表数据（根据表名做过滤，***动态加载维表***） 使用（广播流 + Connect）方式
+
+- 每隔一段时间自动加载（Java定时任务，process的open方法中）
+- 配置信息写到mysql 	--> flinkCDC实时抓取
+- 配置信息写到File     --> Flume+kafka+Flink消费
+- 广播流 + Connect（广播状态大小问题）  **or**  Keyby + connect（数据倾斜）
+- 配置信息写入zk，利用主程序的open方法监听事件（主动推送）
+
+3、将数据写入phoenix（每张维表对应一张phoenix表）
+
+### 用到的相关类
+
+- com.atguigu.app.dim.DimApp
+- com.atguigu.app.func.TableProcessFunction
+- com.atguigu.bean.TableProcess
+- com.atguigu.common.GmallConfig
+- com.atguigu.utils.DimUtil
+- com.atguigu.utils.MyKafkaUtil
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
