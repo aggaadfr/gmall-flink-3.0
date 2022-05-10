@@ -21,7 +21,7 @@
 
 ```
 gmall-flink-3.0
-└── gmall-realtime   																	# 实时模块
+└── gmall-realtime   					 实时模块
 
 ```
 
@@ -52,7 +52,13 @@ gmall-flink-3.0
 - com.atguigu.utils.DimUtil
 - com.atguigu.utils.MyKafkaUtil
 
+### 配置信息表字段
 
+- sourceTable                 表名
+- sinkTable                      phoenix表名
+- sinkColumns                phoenix建表字段
+- sinkPk                            phoenix主键（Hbase的rowkey）
+- sinkExtend                    建表的扩展字段
 
 
 

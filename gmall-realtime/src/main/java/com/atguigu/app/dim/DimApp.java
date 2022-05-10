@@ -2,30 +2,21 @@ package com.atguigu.app.dim;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.app.func.DimSinkFunction;
 import com.atguigu.app.func.TableProcessFunction;
 import com.atguigu.bean.TableProcess;
-import com.atguigu.common.GmallConfig;
 import com.atguigu.utils.MyKafkaUtil;
 import com.ververica.cdc.connectors.mysql.source.MySqlSource;
 import com.ververica.cdc.connectors.mysql.table.StartupOptions;
 import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.state.MapStateDescriptor;
-import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * 1、消费kafka topic_db主题数据（包含所有的业务表数据）
@@ -87,7 +78,7 @@ public class DimApp {
                 .databaseList("gmall-211027-config")
                 .tableList("gmall-211027-config.table_process")
                 .deserializer(new JsonDebeziumDeserializationSchema())  //json的序列化和反序列化方式
-                .startupOptions(StartupOptions.initial())
+                .startupOptions(StartupOptions.initial())               //初始化时加载全量数据
                 .build();
 
         DataStreamSource<String> mysqlSourceDS = env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MysqlSource");
@@ -104,48 +95,7 @@ public class DimApp {
 
         //5、将过滤后的维度数据写入DIM（phoenix）
         hbaseDS.print(">>>>>>>>>>>>>");
-        hbaseDS.addSink(new RichSinkFunction<JSONObject>() {
-            private Connection connection;
-
-            @Override
-            public void open(Configuration parameters) throws Exception {
-                connection = DriverManager.getConnection(GmallConfig.PHOENIX_SERVER);
-            }
-
-            @Override
-            public void invoke(JSONObject value, Context context) throws Exception {
-                PreparedStatement preparedStatement = null;
-
-                try {
-                    String sinkTable = value.getString("sinkTable");
-                    JSONObject data = value.getJSONObject("data");
-
-                    Set<String> columns = data.keySet();
-                    Collection<Object> values = data.values();
-
-                    String insertSql = "upsert into " + GmallConfig.HBASE_SCHEMA + "." + sinkTable + "(" +
-                            StringUtils.join(columns, ",") + ") values ('" +
-                            StringUtils.join(values, "','") + "')";
-
-                    //如果当前为更新数据,则需要删除缓存数据
-//                    if ("update".equals(value.getString("type"))) {
-//                        DimUtil.delDimInfo(sinkTable.toUpperCase(), data.getString("id"));
-//                    }
-
-                    preparedStatement = connection.prepareStatement(insertSql);
-                    preparedStatement.execute();
-                    connection.commit();
-
-                } catch (Exception e) {
-                    DimApp.log.error("插入数据失败！");
-                } finally {
-                    //释放资源
-                    if (preparedStatement != null) {
-                        preparedStatement.close();
-                    }
-                }
-            }
-        });
+        hbaseDS.addSink(new DimSinkFunction());
 
 
         env.execute("DimApp");

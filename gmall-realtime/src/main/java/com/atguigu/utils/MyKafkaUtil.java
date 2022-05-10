@@ -34,6 +34,7 @@ public class MyKafkaUtil {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 
         // 自定义实现kafka的反序列化
+        // SimpleStringSchema主题中的数据不能为null
         return new FlinkKafkaConsumer<String>(topic, new KafkaDeserializationSchema<String>() {
 
             //产生的数据类型或输入格式

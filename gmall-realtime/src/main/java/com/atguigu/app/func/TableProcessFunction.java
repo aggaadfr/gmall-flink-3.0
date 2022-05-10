@@ -54,6 +54,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
         String type = jsonObject.getString("type");
 
         //2.根据sinkColumns配置信息过滤字段
+        //只需要bootstrap-insert、insert、update类型的数据，delete和bootstrap-start、bootstrap-complete数据需要过滤掉
         if (tableProcess != null && ("bootstrap-insert".equals(type) || "insert".equals(type) || "update".equals(type))) {
 
             String sinkColumns = tableProcess.getSinkColumns();
@@ -108,15 +109,17 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
             }
         }
 
-        createTabelSql.append(")").append(sinkExtend);
+        createTabelSql.append(") ").append(sinkExtend);
 
         PreparedStatement preparedStatement = null;
         try {
             //预编译SQL
             preparedStatement = connection.prepareStatement(createTabelSql.toString());
+            //DDL语句不需要commit
             preparedStatement.execute();
         } catch (Exception e) {
             log.error("建表" + sinkTable + "失败！");
+            throw new RuntimeException("建表 " + sinkTable + " 失败！！！！");
         } finally {
             //资源释放
             if (preparedStatement != null) {
