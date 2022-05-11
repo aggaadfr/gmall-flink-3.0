@@ -19,6 +19,7 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 /**
+ * TODO 1
  * 1、消费kafka topic_db主题数据（包含所有的业务表数据）
  * 2、过滤维表数据
  * 3、将数据写入phoenix（每张维表对应一张phoenix表）
@@ -43,7 +44,7 @@ public class DimApp {
 //        env.getCheckpointConfig().setCheckpointStorage("hdfs:xxx:8020//xxx/xx");
 
         String topic = "topic_db";
-        String groupId = "topic_db_dimapp";
+        String groupId = "topic_db_DimApp";
 
         //1、消费kafka ODS主题数据
         DataStreamSource<String> kafkaDS = env.addSource(MyKafkaUtil.getKafkaConsumer(topic, groupId));

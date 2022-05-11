@@ -62,11 +62,21 @@ gmall-flink-3.0
 
 
 
+## DWD层编程
 
+### 1、流量域未经加工的事务事实表
 
+1、数据清洗（脏数据清洗，过滤掉非JSON数据）
 
+2、使用keyby聚合mid数据，做新老用户的检验
 
+3、分流（将各个流的数据分别写出到kafka对应的主题中）
 
+#### 用到的相关类
+
+- com.atguigu.app.dwd.log.BaseLogApp
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
 
 
 
