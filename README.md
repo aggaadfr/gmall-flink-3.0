@@ -31,7 +31,7 @@ gmall-flink-3.0
 
 ## DIM层编程
 
-1、消费kafka topic_db主题数据（包含所有的业务表数据）
+1、消费kafka **topic_db**主题数据（包含所有的业务表数据）
 
 2、过滤维表数据（根据表名做过滤，***动态加载维表***） 使用（广播流 + Connect）方式
 
@@ -66,11 +66,23 @@ gmall-flink-3.0
 
 ### 1、流量域未经加工的事务事实表
 
-1、数据清洗（脏数据清洗，过滤掉非JSON数据）
+1、读取kafka **topic_log** 主题的数据创建流
 
-2、使用keyby聚合mid数据，做新老用户的检验
+2、数据清洗（脏数据清洗，过滤掉非JSON数据）
 
-3、分流（将各个流的数据分别写出到kafka对应的主题中）
+3、使用keyby聚合mid数据，做新老用户的检验
+
+4、分流（将各个流的数据分别写出到kafka对应的主题中）
+
+​	dwd_traffic_page_log			页面浏览：主流
+
+​	dwd_traffic_start_log			 启动日志
+
+​	dwd_traffic_display_log		 曝光日志
+
+​	dwd_traffic_action_log		  动作日志
+
+​	dwd_traffic_error_log			错误日志
 
 #### 用到的相关类
 
@@ -80,13 +92,21 @@ gmall-flink-3.0
 
 
 
+### 2、页面浏览主题，做过滤并统计日活明细uv
 
+1、读取页面浏览主题数据 **dwd_traffic_page_log**
 
+2、把数据转成json格式，并过滤上一跳id不等于null的数据
 
+3、把数据keyby后，使用状态算子(带有过期时间1 day)，过滤掉重复的mid数据
 
+4、将数据写入到kafka dwd_traffic_unique_visitor_detail 主题
 
+#### 用到的相关类
 
-
+- com.atguigu.app.dwd.log.DwdTrafficUniqueVisitorDetail
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
 
 
 

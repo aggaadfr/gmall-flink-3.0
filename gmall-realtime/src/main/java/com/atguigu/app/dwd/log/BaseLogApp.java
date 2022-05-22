@@ -100,6 +100,9 @@ public class BaseLogApp {
 
         // 使用侧输出流对数据进行分流处理，将各个流的数据分别写出到kafka对应的主题中
         OutputTag<String> startTag = new OutputTag<String>("start") {
+            //实现了一个匿名函数，为了放置范型的擦出
+            // startTag<String> extend OutputTag<String>
+            // new OutputTag<String>    --> 编译的时候会被范型擦除
         };
         OutputTag<String> displayTag = new OutputTag<String>("display") {
         };
@@ -134,6 +137,7 @@ public class BaseLogApp {
                     //尝试获取曝光数据
                     JSONArray displays = value.getJSONArray("displays");
                     if (displays != null && displays.size() > 0) {
+                        //曝光数据一条条输出
                         for (int i = 0; i < displays.size(); i++) {
                             JSONObject display = displays.getJSONObject(i);
                             display.put("page_id", pageId);
