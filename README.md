@@ -92,7 +92,7 @@ gmall-flink-3.0
 
 
 
-### 2、页面浏览主题，做过滤并统计日活明细uv
+### 2、流量域独立访客事务事实表
 
 1、读取页面浏览主题数据 **dwd_traffic_page_log**
 
@@ -110,15 +110,44 @@ gmall-flink-3.0
 
 
 
+### 3、流量域用户跳出事务事实表
 
+ 1、读取kafka dwd_traffic_page_log 主题数据
 
+ 2、 将数据转换成JSON对象，提取事件时间生成watermark
 
+ 3、 按照mid进行分组
 
+ 4、 定义CEP模式序列
 
+```
+判断为进入页面：last_page_id is null
+判断为跳出页面：下一条数据的last_page_id is null 或者 超过10秒没有数据(定时器，TTL)
+逻辑：
+    来了一条数据，取出上一跳页面信息判断是否为null
+        1.last_page_id == null ->
+            取出状态数据如果不为null则输出
+            将当前数据更新至状态中来等待第三条数据
+            删除上一次定时器
+            重新注册10秒的定时器
+        2、last_page_id != null  ->
+            清空状态数据
+            删除上一次定时器
+        定时器方法：
+            输出状态数据
+```
 
+ 5、 将模式序列作用到流上
 
+ 6、 提取匹配上的事件以及超时事件
 
+ 7、 合并两个事件流
 
+ 8、 将数据写出到kafka
+
+#### 用到的相关类
+
+- com.atguigu.utils.MyKafkaUtil
 
 
 
