@@ -72,6 +72,7 @@ public class DwdTrafficUserJumpDetail {
 
 
         // 将数据转换成JSON对象，提取事件时间生成watermark
+        // 允许的乱序数据为2秒，默认小于确认ts2秒前的数据全部到齐
         WatermarkStrategy<JSONObject> watermarkStrategy = WatermarkStrategy.<JSONObject>forBoundedOutOfOrderness(Duration.ofSeconds(2))
                 .withTimestampAssigner(new SerializableTimestampAssigner<JSONObject>() {
                     @Override
@@ -115,11 +116,23 @@ public class DwdTrafficUserJumpDetail {
                     }
                 }).within(Time.seconds(10));
 
+        Pattern<JSONObject, JSONObject> p2 = Pattern.<JSONObject>begin("first").where(new SimpleCondition<JSONObject>() {
+                    @Override
+                    public boolean filter(JSONObject value) throws Exception {
+                        return value.getJSONObject("page").getString("last_page_id") == null;
+                    }
+                })
+                .times(2)           //默认为宽松近邻
+                .consecutive()      //指定为严格近邻
+                .within(Time.seconds(10));
+
+
         // 将模式序列作用到流上
         PatternStream<JSONObject> patternStream = CEP.pattern(keyedByMidStream, pattern);
 
         // 提取匹配上的事件以及超时事件
-        OutputTag<JSONObject> timeOutTag = new OutputTag<JSONObject>("time-out");
+        OutputTag<JSONObject> timeOutTag = new OutputTag<JSONObject>("time-out") {
+        };
         SingleOutputStreamOperator<JSONObject> selectDS = patternStream.select(timeOutTag, new PatternTimeoutFunction<JSONObject, JSONObject>() {
             @Override
             public JSONObject timeout(Map<String, List<JSONObject>> map, long l) throws Exception {
