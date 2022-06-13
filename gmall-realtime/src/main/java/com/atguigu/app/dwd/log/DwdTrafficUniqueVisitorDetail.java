@@ -67,9 +67,10 @@ public class DwdTrafficUniqueVisitorDetail {
             public void open(Configuration parameters) throws Exception {
 
                 ValueStateDescriptor<String> valueStateDescriptor = new ValueStateDescriptor<>("visit-dt", String.class);
-
+                // 自定义状态的ttl策略
                 StateTtlConfig build = new StateTtlConfig.Builder(Time.days(1))
                         // 在状态创建时初始化，并在每次写操作时更新
+                        // 在flinkSQL中，left join主表是：OnReadAndWrite 从表是：OnCreateAndWrite
                         .setUpdateType(StateTtlConfig.UpdateType.OnCreateAndWrite)
                         .build();
                 // 配置状态过期策略

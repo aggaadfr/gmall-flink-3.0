@@ -43,7 +43,7 @@ public class BaseLogApp {
 //        env.getCheckpointConfig().setCheckpointTimeout(10000L);
 //        env.getCheckpointConfig().setCheckpointStorage("hdfs:xxx:8020//xxx/xx");
 
-        // 读取kafka topic_log 主题的数据创建流
+        // 读取kafka topic_log 主题的数据创建流 包含所有业务数据
         String topic = "topic_log";
         String groupId = "topic_log_BaseLogApp";
 

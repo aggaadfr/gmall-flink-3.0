@@ -69,4 +69,39 @@ public class MyKafkaUtil {
         return new FlinkKafkaProducer<String>(topic, new SimpleStringSchema(), properties);
     }
 
+    /**
+     * flinkSQL-kafka读取topic_db主题数据
+     * 在SQL中流失概念-时间属性中  -->  PROCTIME()：声明一个额外的列作为处理时间属性
+     * <p>
+     * 一般来说在spark和flink中不会出现复杂的数据结构，都会在前面处理完后在给到计算，Map的数据结构已经算复杂的了
+     *
+     * @param groupId
+     * @return
+     */
+    public static String getTopicDbDDL(String groupId) {
+        return "CREATE TABLE topic_db ( " +
+                "  `database` String, " +
+                "  `table` String, " +
+                "  `type` String, " +
+                "  `data` Map<String,String>, " +
+                "  `old` Map<String,String>, " +
+                "  `pt` AS PROCTIME() " +
+                ")" + MyKafkaUtil.getKafkaDDL("topic_db", groupId);
+    }
+
+    /**
+     * Kafka-Source DDL 语句
+     *
+     * @param topic
+     * @param groupId
+     * @return 拼接好的 Kafka 数据源 DDL 语句
+     */
+    public static String getKafkaDDL(String topic, String groupId) {
+        return " with ('connector' = 'kafka', " +
+                " 'topic' = '" + topic + "'," +
+                " 'properties.bootstrap.servers' = '" + BOOTSTRAP_SERVERS + "', " +
+                " 'properties.group.id' = '" + groupId + "', " +
+                " 'format' = 'json', " +
+                " 'scan.startup.mode' = 'latest-offset')";
+    }
 }

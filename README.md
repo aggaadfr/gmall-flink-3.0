@@ -29,7 +29,7 @@ gmall-flink-3.0
 
 # 数仓分层后每层的编程逻辑
 
-## DIM层编程
+## DIM层编程(DimApp)
 
 1、消费kafka **topic_db**主题数据（包含所有的业务表数据）
 
@@ -64,7 +64,7 @@ gmall-flink-3.0
 
 ## DWD层编程
 
-### 1、流量域未经加工的事务事实表
+### 1、流量域未经加工的事务事实表(BaseLogApp)
 
 1、读取kafka **topic_log** 主题的数据创建流
 
@@ -92,7 +92,7 @@ gmall-flink-3.0
 
 
 
-### 2、流量域独立访客事务事实表
+### 2、流量域独立访客事务事实表(DwdTrafficUniqueVisitorDetail)
 
 1、读取页面浏览主题数据 **dwd_traffic_page_log**
 
@@ -110,7 +110,7 @@ gmall-flink-3.0
 
 
 
-### 3、流量域用户跳出事务事实表
+### 3、流量域用户跳出事务事实表(DwdTrafficUserJumpDetail)
 
  1、读取kafka dwd_traffic_page_log 主题数据
 
@@ -118,7 +118,7 @@ gmall-flink-3.0
 
  3、 按照mid进行分组
 
- 4、 定义CEP模式序列
+ 4、 定义CEP模式序列（处理乱序数据和状态编程）
 
 ```
 判断为进入页面：last_page_id is null
@@ -148,6 +148,49 @@ gmall-flink-3.0
 #### 用到的相关类
 
 - com.atguigu.utils.MyKafkaUtil
+
+### 4、交易域加购事务事实表(DwdTradeCartAdd)
+
+1、读取kafka topic_db主题数据
+
+2、筛选加购数据封装为维表
+
+3、建立mysql-Lookup维度表
+
+4、关联加购表和字典表获得维度退化后的加购表
+
+5、将数据写回到kafka dwd_trade_cart_add DWD层
+
+#### 用到的相关类
+
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.utils.MysqlUtil
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
