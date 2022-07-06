@@ -166,13 +166,21 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.utils.MysqlUtil
 
+### 5、交易域订单预处理表(**DwdTradeOrderPreProcess **)
 
+1、读取kafka ODS topic_db主题数据
 
+2、刷选订单明细表(insert、updata)、订单表(insert、updata)、订单明细活动关联表(insert)、订单明细优惠卷关联表(insert)、Mysql-Lookup字典表
 
+3、关联5张表获得订单预处理表
 
+4、写入kafka订单处理主题
 
+#### 用到相关的类
 
-
+- com.atguigu.app.dwd.db.DwdTradeOrderPreProcess
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.utils.MysqlUtil
 
 
 

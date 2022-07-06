@@ -104,4 +104,20 @@ public class MyKafkaUtil {
                 " 'format' = 'json', " +
                 " 'scan.startup.mode' = 'latest-offset')";
     }
+
+    /**
+     * Kafka-Sink DDL 语句
+     *
+     * @param topic 输出到 Kafka 的目标主题
+     * @return
+     */
+    public static String getUpsertKafkaDDL(String topic) {
+        return "WITH ( " +
+                "  'connector' = 'upsert-kafka', " +
+                "  'topic' = '" + topic + "', " +
+                "  'properties.bootstrap.servers' = '" + BOOTSTRAP_SERVERS + "', " +
+                "  'key.format' = 'json', " +
+                "  'value.format' = 'json' " +
+                ")";
+    }
 }

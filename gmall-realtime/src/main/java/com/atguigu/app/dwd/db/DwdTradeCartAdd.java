@@ -86,6 +86,7 @@ public class DwdTradeCartAdd {
 
         //打印测试
         //Table table = tableEnv.sqlQuery("select * from base_dic");
+        tableEnv.sqlQuery("select * from" + cartAddTable);
         //DataStream<Row> rowDataStream = tableEnv.toAppendStream(table, Row.class);
         //rowDataStream.print(">>>>>>>>>>>");
 

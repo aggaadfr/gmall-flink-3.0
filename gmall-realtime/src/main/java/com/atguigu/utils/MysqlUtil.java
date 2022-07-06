@@ -12,6 +12,7 @@ package com.atguigu.utils;
 public class MysqlUtil {
 
     /**
+     * 维表连接 Lookup Join
      * 获取维表
      *
      * @return
