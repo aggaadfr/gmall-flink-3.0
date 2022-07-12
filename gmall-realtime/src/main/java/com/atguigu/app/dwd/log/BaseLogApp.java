@@ -20,8 +20,7 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 /**
- * TODO 2
- * 未经加工的log数据表
+ * TODO 2 未经加工的log数据表
  * 1、数据清洗（脏数据清洗，过滤掉非JSON数据）
  * 2、使用keyby聚合mid数据，做新老用户的检验
  * 3、分流（将各个流的数据分别写出到kafka对应的主题中）

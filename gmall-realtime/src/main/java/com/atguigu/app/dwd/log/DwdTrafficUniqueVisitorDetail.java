@@ -17,7 +17,7 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
- * TODO 3
+ * TODO 3 流量域独立访客事务事实表
  * dwd层对页面浏览主题，做过滤并统计日活明细uv
  * 1、读取页面浏览主题数据 dwd_traffic_page_log
  * 2、把数据转成json格式，并过滤上一跳id不等于null的数据

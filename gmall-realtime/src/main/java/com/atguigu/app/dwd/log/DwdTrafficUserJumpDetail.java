@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO 4
- * 流量域用户跳出事务事实表
+ * TODO 4 流量域用户跳出事务事实表
  *  1、读取kafka dwd_traffic_page_log 主题数据
  *  2、 将数据转换成JSON对象，提取事件时间生成watermark
  *  3、 按照mid进行分组

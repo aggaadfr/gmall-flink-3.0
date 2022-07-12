@@ -9,8 +9,7 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import java.time.Duration;
 
 /**
- * TODO 5
- * 交易域加购事务事实表
+ * TODO 5 交易域加购事务事实表
  * 1、读取kafka topic_db主题数据
  * 2、筛选加购数据封装为维表
  * 3、建立mysql-Lookup维度表

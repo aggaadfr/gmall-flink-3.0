@@ -176,19 +176,25 @@ gmall-flink-3.0
 
 4、写入kafka订单处理主题
 
-#### 用到相关的类
+#### 用到的相关的类
 
 - com.atguigu.app.dwd.db.DwdTradeOrderPreProcess
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.utils.MysqlUtil
 
+### 6、交易域下单事务事实表(DwdTradeOrderDetail)
 
+1、消费Kafka DWD dwd_trade_order_pre_process订单预处理主题
 
+2、过滤出订单明细数据
 
+3、将数据写到kafka dwd_trade_order_detail
 
+#### 用到的相关类
 
+- com.atguigu.app.dwd.db.DwdTradeOrderDetail
 
-
+- com.atguigu.utils.MyKafkaUtil
 
 
 

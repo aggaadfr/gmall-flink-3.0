@@ -9,7 +9,7 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import java.time.Duration;
 
 /**
- * TODO 6
+ * TODO 6 交易域订单预处理表
  * 1、读取kafka ODS topic_db主题数据
  * 2、刷选订单明细表(insert、updata)、订单表(insert、updata)、订单明细活动关联表(insert)、订单明细优惠卷关联表(insert)、Mysql-Lookup字典表
  * 3、关联5张表获得订单预处理表
