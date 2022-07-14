@@ -15,7 +15,7 @@ import java.time.ZoneId;
 /**
  * TODO 8 交易域取消订单事务事实表
  * 1、消费Kafka DWD dwd_trade_order_pre_process订单预处理主题
- * 2、过滤出订单明细数据
+ * 2、过滤出订单明细数据;保留修改了 order_status 字段且修改后该字段值为 "1003" 的数据;
  * 3、将数据写到kafka dwd_trade_order_detail
  * Project: gmall-flink-3.0
  * Package: com.atguigu.app.dwd.db

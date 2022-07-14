@@ -186,7 +186,7 @@ gmall-flink-3.0
 
 1、消费Kafka DWD dwd_trade_order_pre_process订单预处理主题
 
-2、过滤出订单明细数据
+2、过滤出订单明细数据；新增数据，即订单表操作类型为 insert 的数据即为订单明细数据；
 
 3、将数据写到kafka dwd_trade_order_detail主题
 
@@ -200,7 +200,7 @@ gmall-flink-3.0
 
 1、消费Kafka DWD dwd_trade_order_pre_process订单预处理主题
 
-2、过滤出取消订单明细数据
+2、过滤出取消订单明细数据；保留修改了 order_status 字段且修改后该字段值为 "1003" 的数据;
 
 3、将数据写到kafka dwd_trade_cancel_detail主题
 
@@ -209,13 +209,21 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil;
 - com.atguigu.app.dwd.db.DwdTradeCancelDetail
 
+### 8、交易域支付成功事务事实表(DwdTradePayDetailSuc)
 
+1、获取订单明细数据 dwd dwd_trade_order_detail主题
 
+2、筛选支付表数据
 
+3、构建 MySQL-LookUp 字典表
 
+4、关联上述三张表形成支付成功宽表，写入 Kafka  dwd_trade_pay_detail_suc 支付成功主题
 
+#### 用到的相关类
 
-
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.utils.MysqlUtil
+- com.atguigu.app.dwd.db.DwdTradePayDetailSuc
 
 
 
