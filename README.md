@@ -188,13 +188,54 @@ gmall-flink-3.0
 
 2、过滤出订单明细数据
 
-3、将数据写到kafka dwd_trade_order_detail
+3、将数据写到kafka dwd_trade_order_detail主题
 
 #### 用到的相关类
 
 - com.atguigu.app.dwd.db.DwdTradeOrderDetail
 
 - com.atguigu.utils.MyKafkaUtil
+
+### 7、交易域取消订单事务事实表(DwdTradeCancelDetail)
+
+1、消费Kafka DWD dwd_trade_order_pre_process订单预处理主题
+
+2、过滤出取消订单明细数据
+
+3、将数据写到kafka dwd_trade_cancel_detail主题
+
+#### 用到的相关类
+
+- com.atguigu.utils.MyKafkaUtil;
+- com.atguigu.app.dwd.db.DwdTradeCancelDetail
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
