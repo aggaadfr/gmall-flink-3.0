@@ -274,6 +274,45 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dwd.db.DwdToolCouponGet
 
+### 12、工具域优惠券使用（下单）事务事实表(DwdToolCouponOrder)
+
+1、消费kafka ODS topic_db 业务主题数据
+
+2、筛选优惠卷领取数据封装为表
+
+3、封装为流
+
+4、封装为表
+
+5、写入kafka优惠券使用(下单)事实主题 dwd_tool_coupon_order
+
+### 用到的相关类
+
+- com.alibaba.fastjson.JSON
+- com.atguigu.bean.CouponUseOrderBean
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dwd.db.DwdToolCouponOrder
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
