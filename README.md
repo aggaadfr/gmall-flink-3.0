@@ -261,13 +261,18 @@ gmall-flink-3.0
 - com.atguigu.utils.MysqlUtil
 - com.atguigu.app.dwd.db.DwdTradeRefundPaySuc
 
+### 11、工具域优惠券领取事务事实表(DwdToolCouponGet)
 
+1、消费kafka ODS topic_db 主题数据
 
+2、筛选优惠卷领取数据封装为表
 
+3、写入kafka优惠卷领取事务主题表 dwd_tool_coupon_get
 
+#### 用到的相关类
 
-
-
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dwd.db.DwdToolCouponGet
 
 
 
