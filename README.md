@@ -225,21 +225,23 @@ gmall-flink-3.0
 - com.atguigu.utils.MysqlUtil
 - com.atguigu.app.dwd.db.DwdTradePayDetailSuc
 
+### 9、交易域退单事务事实表(DwdTradeOrderRefund)
 
+1、筛选退单表数据 topic_db
 
+2、筛选订单表数据并转化为流
 
+3、建立 MySQL-Lookup 字典表 base_dic
 
+4、关联这几张表获得退单明细宽表，写入 Kafka dwd_trade_order_refund 退单明细主题
 
+#### 用到的相关类
 
+- com.atguigu.utils.MyKafkaUtil
 
+- com.atguigu.utils.MysqlUtil
 
-
-
-
-
-
-
-
+- com.atguigu.app.dwd.db.DwdTradeOrderRefund
 
 
 
