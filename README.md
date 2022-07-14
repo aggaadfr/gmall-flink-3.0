@@ -243,15 +243,23 @@ gmall-flink-3.0
 
 - com.atguigu.app.dwd.db.DwdTradeOrderRefund
 
+### 10、交易域退款成功事务事实表(DwdTradeRefundPaySuc)
 
+1、建立 MySQL-Lookup 字典表
 
+2、读取退款表数据，筛选退款成功数据
 
+3、读取订单表数据，过滤退款成功订单数据
 
+4、筛选退款成功的退单明细数据
 
+5、关联四张表并写出到 Kafka 退款成功主题
 
+#### 用到的相关类
 
-
-
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.utils.MysqlUtil
+- com.atguigu.app.dwd.db.DwdTradeRefundPaySuc
 
 
 
