@@ -306,6 +306,50 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dwd.db.DwdToolCouponPay
 
+### 14、互动域评价事务事实表(DwdInteractionComment)
+
+1、消费kafka ODS 业务主题数据
+
+2、筛选评论数据封装为表
+
+3、维度退化获取最终的评论表，建立Mysql-Lookup字典表 base_dic
+
+4、写入Kafka评论事实主题
+
+#### 用到的相关类
+
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.utils.MysqlUtil
+- com.atguigu.app.dwd.db.DwdInteractionComment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
