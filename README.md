@@ -322,13 +322,18 @@ gmall-flink-3.0
 - com.atguigu.utils.MysqlUtil
 - com.atguigu.app.dwd.db.DwdInteractionComment
 
+### 15、用户域用户注册事务事实表(DwdUserRegister)
 
+1、消费kafka ODS topic_db 业务主题数据
 
+2、筛选用户注册数据封装为表
 
+3、写入kafka用户注册事实主题 dwd_user_register
 
+#### 用到的相关类
 
-
-
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dwd.db.DwdUserRegister
 
 
 
