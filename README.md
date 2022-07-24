@@ -62,7 +62,7 @@ gmall-flink-3.0
 
 
 
-## DWD层编程
+## DWD层编程(数据明细层)
 
 ### 1、流量域未经加工的事务事实表(BaseLogApp)
 
@@ -335,13 +335,29 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dwd.db.DwdUserRegister
 
+## DWS层(聚合数据层)
 
+### 16、流量域来源关键词粒度页面浏览各窗口汇总表
 
+1、使用DDL方式读取 DWD层页面浏览日志创建表,同时获取事件时间生成Watermark
 
+2、过滤出搜索数据
 
+3、使用自定义函数分词处理
 
+4、分组开窗聚合
 
+5、将数据转化为流
 
+6、将数据写出到ClinkHouse(先在ClinkHouse中创建出表)
+
+#### 用到的相关类
+
+- com.atguigu.app.func.KeywordUDTF
+- com.atguigu.bean.KeywordBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dws.DwsTrafficSourceKeywordPageViewWindow
 
 
 
