@@ -359,13 +359,25 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dws.DwsTrafficSourceKeywordPageViewWindow
 
+### 17、流量域版本-渠道-地区-访客类别粒度页面浏览各窗口汇总表
 
+1、读取3个主题的数据创建三个流。
 
+2、将3个流统一数据格式 JavaBean
 
+3、提取事件事件生成WaterMark
 
+4、分组、开窗、聚合
 
+5、将数据写出到ClinkHouse
 
+#### 用到的相关类
 
+- com.atguigu.bean.TrafficPageViewBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dws.DwsTrafficVcChArIsNewPageViewWindow
 
 
 
