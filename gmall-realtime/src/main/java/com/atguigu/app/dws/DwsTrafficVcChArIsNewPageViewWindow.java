@@ -10,8 +10,6 @@ import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
-import org.apache.flink.api.common.restartstrategy.RestartStrategies;
-import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.runtime.state.hashmap.HashMapStateBackend;
@@ -21,6 +19,7 @@ import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.util.Collector;
@@ -29,6 +28,11 @@ import java.time.Duration;
 
 /**
  * TODO 18 流量域版本-渠道-地区-访客类别粒度页面浏览各窗口汇总表
+ * 1、读取3个主题的数据创建三个流。
+ * 2、将3个流统一数据格式 JavaBean
+ * 3、提取事件事件生成WaterMark
+ * 4、分组、开窗、聚合
+ * 5、将数据写出到ClinkHouse
  * <p>
  * Project: gmall-flink-3.0
  * Package: com.atguigu.app.dws
@@ -49,9 +53,9 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
         env.getCheckpointConfig().enableExternalizedCheckpoints(
                 CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
         );
-        env.setRestartStrategy(RestartStrategies.failureRateRestart(
-                3, Time.days(1), Time.minutes(1)
-        ));
+//        env.setRestartStrategy(RestartStrategies.failureRateRestart(
+//                3, Time.days(1), Time.minutes(1)
+//        ));
         env.getCheckpointConfig().setCheckpointStorage("hdfs://hadoop102:8020/ck");
         env.getCheckpointConfig().setAlignmentTimeout(Duration.ofSeconds(10L));
 
@@ -61,7 +65,7 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
         // TODO 2.读取3个主题的数据创建三个流
         //读取dwd_traffic_page_log主题
         String topic = "dwd_traffic_page_log";
-        String groupId = "dws_traffic_channel_page_view_window";
+        String groupId = "dws_traffic_vc_ch_ar_isnew_page_view_window";
         FlinkKafkaConsumer<String> kafkaConsumer = MyKafkaUtil.getKafkaConsumer(topic, groupId);
         DataStreamSource<String> pageLogSource = env.addSource(kafkaConsumer);
         SingleOutputStreamOperator<JSONObject> jsonObjStream = pageLogSource.map(JSON::parseObject);
@@ -79,7 +83,7 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
 
         // TODO 3.将3个流统一数据格式 JavaBean
         //dwd_traffic_page_log主题数据转化
-        SingleOutputStreamOperator<TrafficPageViewBean> mainStream = jsonObjStream.map(
+        SingleOutputStreamOperator<TrafficPageViewBean> trafficPageViewWithPvDS = jsonObjStream.map(
                 new MapFunction<JSONObject, TrafficPageViewBean>() {
                     @Override
                     public TrafficPageViewBean map(JSONObject jsonObj) throws Exception {
@@ -131,7 +135,7 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
         );
 
         //dwd_traffic_user_jump_detail主题数据转换
-        SingleOutputStreamOperator<TrafficPageViewBean> ujdMappedStream = ujdSource.map(jsonStr -> {
+        SingleOutputStreamOperator<TrafficPageViewBean> trafficPageViewWithUjDS = ujdSource.map(jsonStr -> {
             JSONObject jsonObj = JSONObject.parseObject(jsonStr);
             JSONObject common = jsonObj.getJSONObject("common");
             Long ts = jsonObj.getLong("ts") + 10 * 1000L;
@@ -160,7 +164,7 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
         });
 
         //dwd_traffic_unique_visitor_detail主题数据转换
-        SingleOutputStreamOperator<TrafficPageViewBean> uvMappedStream = uvSource.map(jsonStr -> {
+        SingleOutputStreamOperator<TrafficPageViewBean> trafficPageViewWithUvDS = uvSource.map(jsonStr -> {
             JSONObject jsonObj = JSON.parseObject(jsonStr);
             JSONObject common = jsonObj.getJSONObject("common");
             Long ts = jsonObj.getLong("ts");
@@ -191,14 +195,14 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
 
         // TODO 4.提取事件事件生成WaterMark
         //union合并三个主题数据
-        DataStream<TrafficPageViewBean> pageViewBeanDS = mainStream
-                .union(ujdMappedStream)
-                .union(uvMappedStream);
+        DataStream<TrafficPageViewBean> pageViewBeanDS = trafficPageViewWithPvDS.union(
+                trafficPageViewWithUjDS,
+                trafficPageViewWithUvDS);
 
         //生成watermark
-        SingleOutputStreamOperator<TrafficPageViewBean> withWatermarkStream = pageViewBeanDS.assignTimestampsAndWatermarks(
+        SingleOutputStreamOperator<TrafficPageViewBean> unionDS = pageViewBeanDS.assignTimestampsAndWatermarks(
                 WatermarkStrategy
-                        .<TrafficPageViewBean>forMonotonousTimestamps()
+                        .<TrafficPageViewBean>forBoundedOutOfOrderness(Duration.ofSeconds(13))
                         .withTimestampAssigner(
                                 new SerializableTimestampAssigner<TrafficPageViewBean>() {
                                     @Override
@@ -212,7 +216,7 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
 
         // TODO 5.分组、开窗、聚合
         // 分组
-        KeyedStream<TrafficPageViewBean, Tuple4<String, String, String, String>> keyedBeanStream = withWatermarkStream.keyBy(trafficPageViewBean ->
+        KeyedStream<TrafficPageViewBean, Tuple4<String, String, String, String>> keyedStream = unionDS.keyBy(trafficPageViewBean ->
                         Tuple4.of(
                                 trafficPageViewBean.getVc(),
                                 trafficPageViewBean.getCh(),
@@ -223,12 +227,12 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
         );
 
         //开窗
-        WindowedStream<TrafficPageViewBean, Tuple4<String, String, String, String>, TimeWindow> windowStream = keyedBeanStream.window(TumblingEventTimeWindows.of(
-                        org.apache.flink.streaming.api.windowing.time.Time.seconds(10L)))
-                .allowedLateness(org.apache.flink.streaming.api.windowing.time.Time.seconds(10L));
+        WindowedStream<TrafficPageViewBean, Tuple4<String, String, String, String>, TimeWindow> windowedStream = keyedStream.window(TumblingEventTimeWindows.of(
+                        Time.seconds(10L)))
+                .allowedLateness(Time.seconds(10L));
 
         //聚合--增量聚合+窗口 (增量聚合，来一条聚合一条，效率高，占用空间小)
-        SingleOutputStreamOperator<TrafficPageViewBean> reducedStream = windowStream.reduce(
+        SingleOutputStreamOperator<TrafficPageViewBean> reduceDS = windowedStream.reduce(
                 new ReduceFunction<TrafficPageViewBean>() {
                     @Override
                     public TrafficPageViewBean reduce(TrafficPageViewBean value1, TrafficPageViewBean value2) throws Exception {
@@ -269,7 +273,7 @@ public class DwsTrafficVcChArIsNewPageViewWindow {
 
 
         // TODO 6.将数据写出到ClinkHouse
-        reducedStream.addSink(ClickHouseUtil.<TrafficPageViewBean>getJdbcSink(
+        reduceDS.addSink(ClickHouseUtil.<TrafficPageViewBean>getJdbcSink(
                 "insert into dws_traffic_vc_ch_ar_is_new_page_view_window values(?,?,?,?,?,?,?,?,?,?,?,?)"
         ));
 
