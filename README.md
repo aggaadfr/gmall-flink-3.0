@@ -379,13 +379,25 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dws.DwsTrafficVcChArIsNewPageViewWindow
 
+### 18、流量域页面浏览各窗口汇总表
 
+1、读取 Kafka 页面主题数据
 
+2、转换数据结构，过滤数据，设置水位线
 
+3、按照 mid 分组，统计首页和商品详情页独立访客数，转换数据结构
 
+4、开窗，聚合
 
+5、将数据写出到 ClickHouse
 
+#### 用到的相关类
 
+- com.atguigu.bean.TrafficHomeDetailPageViewBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dws.DwsTrafficPageViewWindow
 
 
 
