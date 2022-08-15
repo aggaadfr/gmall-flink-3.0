@@ -399,6 +399,60 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dws.DwsTrafficPageViewWindow
 
+### 19、用户域用户登陆各窗口汇总表
+
+1、读取 Kafka 页面主题数据
+
+2、转换数据结构，过滤数据，设置水位线，按照 uid 分组
+
+3、统计回流用户数和独立用户数，开窗，聚合
+
+4、写入 ClickHouse
+
+#### 用到的相关类
+
+- com.atguigu.bean.UserLoginBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dws.DwsUserUserLoginWindow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

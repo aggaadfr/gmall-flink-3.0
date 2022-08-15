@@ -31,7 +31,7 @@ import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.util.Collector;
 
 /**
- * 18、流量域页面浏览各窗口汇总表
+ * TODO 19、流量域页面浏览各窗口汇总表
  * 1、读取 Kafka 页面主题数据
  * 2、转换数据结构，过滤数据，设置水位线
  * 3、按照 mid 分组，统计首页和商品详情页独立访客数，转换数据结构
