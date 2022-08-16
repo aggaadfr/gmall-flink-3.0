@@ -417,11 +417,23 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dws.DwsUserUserLoginWindow
 
+### 20、用户域用户注册各窗口汇总表
 
+1、读取 Kafka 用户注册主题数据
+2、转换数据结构(String 转换为 JSONObject)
+3、设置水位线
+4、开窗、聚合
+5、写入 ClickHouse
 
+#### 用到的相关类
 
+- com.atguigu.bean.UserRegisterBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dws.DwsUserUserRegisterWindow
 
-
+### 21、交易域加购各窗口汇总表
 
 
 
