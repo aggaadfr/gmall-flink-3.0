@@ -435,11 +435,21 @@ gmall-flink-3.0
 
 ### 21、交易域加购各窗口汇总表
 
+1、从Kafka加购明细主题读取数据
 
+2、转换数据结构、设置水位线、按照用户 id 分组、过滤独立用户加购记录
 
+3、开窗、聚合
 
+4、将数据写入 ClickHouse
 
+#### 用到的相关类
 
+- com.atguigu.bean.CartAddUuBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.app.dws.DwsTradeCartAddUuWindow
 
 
 
