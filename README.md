@@ -451,13 +451,34 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.app.dws.DwsTradeCartAddUuWindow
 
+### 22、交易域下单各窗口汇总表
 
+1、从 Kafka订单明细主题读取数据
 
+2、过滤为 null 数据并转换数据结构
 
+3、按照 order_detail_id 分组
 
+4、对 order_detail_id 相同的数据去重
 
+5、设置水位线
 
+6、按照用户 id 分组
 
+7、计算度量字段的值
+
+8、开窗、聚合
+
+9、写出到 ClickHouse
+
+#### 用到的相关类
+
+- com.atguigu.bean.TradeOrderBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.utils.TimestampLtz3CompareUtil
+- com.atguigu.app.dws.DwsTradeOrderWindow
 
 
 
