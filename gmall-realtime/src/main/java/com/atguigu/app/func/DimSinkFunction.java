@@ -2,6 +2,7 @@ package com.atguigu.app.func;
 
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.common.GmallConfig;
+import com.atguigu.utils.DimUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flink.configuration.Configuration;
@@ -47,9 +48,9 @@ public class DimSinkFunction extends RichSinkFunction<JSONObject> {
                     StringUtils.join(values, "','") + "')";
 
             //如果当前为更新数据,则需要删除缓存数据
-//                    if ("update".equals(value.getString("type"))) {
-//                        DimUtil.delDimInfo(sinkTable.toUpperCase(), data.getString("id"));
-//                    }
+            if ("update".equals(value.getString("type"))) {
+                DimUtil.delDimInfo(sinkTable.toUpperCase(), data.getString("id"));
+            }
 
             preparedStatement = connection.prepareStatement(insertSql);
             preparedStatement.execute();

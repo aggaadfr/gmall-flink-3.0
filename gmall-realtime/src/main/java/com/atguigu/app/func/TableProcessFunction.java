@@ -72,6 +72,8 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
     }
 
     // 广播流数据
+    //Value:{"before":null,"after":{"source_table":1,"sink_table":"三星","sink_columns":"/static/default.jpg"....},"source":{"version":"1.5.4.Final","connector":"mysql","name":"mysql_binlog_source","ts_ms":1649744439676,"snapshot":"false","db":"gmall-210927-flink","sequence":null,"table":"base_trademark","server_id":0,"gtid":null,"file":"","pos":0,"row":0,"thread":null,"query":null},"op":"r","ts_ms":1649744439678,"transaction":null}
+    //Mysql表中的字段是source_table，而javaBean中的字段是sourceTable，json会自动自动转化
     @Override
     public void processBroadcastElement(String s, BroadcastProcessFunction<JSONObject, String, JSONObject>.Context context, Collector<JSONObject> collector) throws Exception {
         //1.获取并解析数据为JavaBean对象

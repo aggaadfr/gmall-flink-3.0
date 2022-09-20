@@ -480,13 +480,26 @@ gmall-flink-3.0
 - com.atguigu.utils.TimestampLtz3CompareUtil
 - com.atguigu.app.dws.DwsTradeOrderWindow
 
+### 23、交易域品牌-品类-用户-SPU粒度下单各窗口汇总表
 
+1、从 Kafka 订单明细主题读取数据。
 
+2、过滤 null 数据并按照唯一键对数据去重。
 
+3、关联维度信息，按照维度分组。
 
+4、统计各维度各窗口的订单数和订单金额。
 
+5、将数据写入 ClickHouse。
 
+#### 用到的相关类
 
+- com.atguigu.app.func.DimAsyncFunction
+- com.atguigu.bean.TradeTrademarkCategoryUserSpuOrderBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+- com.atguigu.utils.TimestampLtz3CompareUtil
 
 
 

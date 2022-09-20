@@ -107,6 +107,8 @@ public class MyKafkaUtil {
 
     /**
      * Kafka-Sink DDL 语句
+     * upsert进kafka，如果使用left join会导致右边的数据为null，所以在自定义kafka序列化时会将null的数据转化成""
+     * 在下游读取数据的时候还需要判断重复数据
      *
      * @param topic 输出到 Kafka 的目标主题
      * @return

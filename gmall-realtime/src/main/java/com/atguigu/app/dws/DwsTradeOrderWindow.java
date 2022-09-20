@@ -11,18 +11,13 @@ import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.functions.FilterFunction;
-import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
-import org.apache.flink.api.common.time.Time;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.runtime.state.hashmap.HashMapStateBackend;
-import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.AllWindowedStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
-import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
@@ -58,19 +53,19 @@ public class DwsTradeOrderWindow {
         env.setParallelism(4);
 
         // TODO 2. 状态后端设置
-        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);
-        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(3000L);
-        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000L);
-        env.getCheckpointConfig().enableExternalizedCheckpoints(
-                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
-        );
-        env.setRestartStrategy(RestartStrategies.failureRateRestart(
-                3, Time.days(1), Time.minutes(1)
-        ));
-        env.setStateBackend(new HashMapStateBackend());
-        env.getCheckpointConfig().setCheckpointStorage(
-                "hdfs://hadoop102:8020/ck"
-        );
+//        env.enableCheckpointing(3000L, CheckpointingMode.EXACTLY_ONCE);
+//        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(3000L);
+//        env.getCheckpointConfig().setCheckpointTimeout(60 * 1000L);
+//        env.getCheckpointConfig().enableExternalizedCheckpoints(
+//                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
+//        );
+//        env.setRestartStrategy(RestartStrategies.failureRateRestart(
+//                3, Time.days(1), Time.minutes(1)
+//        ));
+//        env.setStateBackend(new HashMapStateBackend());
+//        env.getCheckpointConfig().setCheckpointStorage(
+//                "hdfs://hadoop102:8020/ck"
+//        );
 
         System.setProperty("HADOOP_USER_NAME", "atguigu");
 
@@ -123,11 +118,13 @@ public class DwsTradeOrderWindow {
                                 JSONObject lastData = filterState.value();
 
                                 if (lastData == null) {
+                                    //注册一个处理时间
                                     ctx.timerService().registerProcessingTimeTimer(5000L);
                                     filterState.update(jsonObj);
                                 } else {
                                     String lastRowOpTs = lastData.getString("row_op_ts");
                                     String rowOpTs = jsonObj.getString("row_op_ts");
+                                    //表示后到的数据大
                                     if (TimestampLtz3CompareUtil.compare(lastRowOpTs, rowOpTs) <= 0) {
                                         filterState.update(jsonObj);
                                     }
