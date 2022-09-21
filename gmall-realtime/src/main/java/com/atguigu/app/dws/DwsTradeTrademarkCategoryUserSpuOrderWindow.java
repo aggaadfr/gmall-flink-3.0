@@ -269,7 +269,7 @@ public class DwsTradeTrademarkCategoryUserSpuOrderWindow {
 
         //TODO 7.将数据写出到ClickHouse
         reduceDS.print("reduceDS>>>>>>>>>>>>>");
-        reduceDS.addSink(ClickHouseUtil.getJdbcSink("insert into dws_trade_trademark_category_user_spu_order_window values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"));
+        reduceDS.addSink(ClickHouseUtil.<TradeTrademarkCategoryUserSpuOrderBean>getJdbcSink("insert into dws_trade_trademark_category_user_spu_order_window values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"));
 
         //TODO 8.启动任务
         env.execute("DwsTradeTrademarkCategoryUserSpuOrderWindow");

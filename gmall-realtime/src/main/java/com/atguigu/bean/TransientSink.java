@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * sink注解类，用于过滤不需要的sink反射字段
+ * sink注解类，用于过滤chickhouse不需要的sink反射字段
  * Project: gmall-flink-3.0
  * Package: com.atguigu.bean
  * Version: 1.0

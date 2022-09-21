@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.Set;
 
 /**
- * DwsTradeTrademarkCategoryUserSpuOrderWindow 实体类
+ * DwsTradeTrademarkCategoryUserSpuOrderWindow的实体类
  * Project: gmall-flink-3.0
  * Package: com.atguigu.bean
  * Version: 1.0

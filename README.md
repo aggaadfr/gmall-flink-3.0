@@ -503,13 +503,26 @@ gmall-flink-3.0
 - com.atguigu.utils.MyKafkaUtil
 - com.atguigu.utils.TimestampLtz3CompareUtil
 
+### 24、交易域省份粒度下单各窗口汇总表
 
+1、从 Kafka 订单明细主题读取数据。
+2、过滤 null 数据并转换数据结构。
+3、按照唯一键去重。
+4、转换数据结构。
+5、设置水位线。
+6、按照省份 ID 和省份名称分组。
+7、开窗。
+8、聚合计算。
+9、关联省份信息。
+10、写出到 ClickHouse。
 
+#### 用到的相关类
 
-
-
-
-
+- com.atguigu.app.func.DimAsyncFunction
+- com.atguigu.app.func.OrderDetailFilterFunction
+- com.atguigu.bean.TradeProvinceOrderWindow
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
 
 
 
