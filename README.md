@@ -524,6 +524,50 @@ gmall-flink-3.0
 - com.atguigu.utils.ClickHouseUtil
 - com.atguigu.utils.DateFormatUtil
 
+### 25、交易域支付各窗口汇总表
+
+1、从 Kafka 支付成功明细主题读取数据。
+2、过滤为 null 的数据，转换数据结构。
+3、按照唯一键分组。
+4、去重。
+5、设置水位线，按照 user_id 分组。
+6、统计独立支付人数和新增支付人数。
+7、开窗、聚合。
+8、写出到 ClickHouse。
+
+#### 用到的相关类
+
+- com.atguigu.bean.TradePaymentWindowBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
