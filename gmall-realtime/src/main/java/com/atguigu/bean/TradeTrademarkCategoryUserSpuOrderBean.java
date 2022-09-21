@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * DwsTradeTrademarkCategoryUserSpuOrderWindow 实体类
  * Project: gmall-flink-3.0
@@ -38,9 +40,10 @@ public class TradeTrademarkCategoryUserSpuOrderBean {
     String category3Name;
 
     // sku_id
-    // 该字段不写出数据
     @TransientSink
     String skuId;
+    @TransientSink
+    Set<String> orderIdSet;
 
     // 用户 ID
     String userId;
@@ -49,16 +52,16 @@ public class TradeTrademarkCategoryUserSpuOrderBean {
     // spu 名称
     String spuName;
     // 下单次数
-    @Builder.Default
-    Long orderCount = 0L;
+    @Builder.Default //作用是保留用户自己所给定的默认值
+            Long orderCount = 0L;
     // 下单金额
-    @Builder.Default
-    Double orderAmount = 0.0D;
+    Double orderAmount;
     // 时间戳
     Long ts;
 
     public static void main(String[] args) {
-        TradeTrademarkCategoryUserSpuOrderBean build = builder().build();
-        System.out.println(build);
+        TradeTrademarkCategoryUserSpuOrderBean orderBean = builder().category2Id("1001").build();
+
+        System.out.println(orderBean);
     }
 }

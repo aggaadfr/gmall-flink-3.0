@@ -2,6 +2,8 @@
 
 大数据项目之电商实时数仓3.0版本
 
+参考giteen地址：https://gitee.com/wh-alex/gmall-211027-flink.git
+
 
 
 # 使用框架
