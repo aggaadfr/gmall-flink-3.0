@@ -119,7 +119,7 @@ public class DwsTradeProvinceOrderWindow {
                 provinceOrderWindow.setTs(System.currentTimeMillis());
                 provinceOrderWindow.setEdt(DateFormatUtil.toYmdHms(window.getEnd()));
                 provinceOrderWindow.setStt(DateFormatUtil.toYmdHms(window.getStart()));
-
+                //处理所有订单去重后的个数，也就是订单次数
                 provinceOrderWindow.setOrderCount((long) provinceOrderWindow.getOrderIdSet().size());
 
                 //输出数据

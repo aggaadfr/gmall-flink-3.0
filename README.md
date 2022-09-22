@@ -542,11 +542,24 @@ gmall-flink-3.0
 - com.atguigu.utils.DateFormatUtil
 - com.atguigu.utils.MyKafkaUtil
 
+### 26、交易域品牌-品类-用户粒度退单各窗口汇总表
 
+1、从 Kafka 退单明细主题读取数据。
+2、过滤 null 数据并转换数据结构。
+3、按照唯一键去重。
+4、转换数据结构。
+5、补充维度信息。
+6、设置水位线。
+7、分组、开窗、聚合。
+8、写出到 ClickHouse。
 
+#### 用到的相关类
 
-
-
+- com.atguigu.app.func.DimAsyncFunction
+- com.atguigu.bean.TradeTrademarkCategoryUserRefundBean
+- com.atguigu.utils.ClickHouseUtil
+- com.atguigu.utils.DateFormatUtil
+- com.atguigu.utils.MyKafkaUtil
 
 
 
