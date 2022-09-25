@@ -561,11 +561,27 @@ gmall-flink-3.0
 - com.atguigu.utils.DateFormatUtil
 - com.atguigu.utils.MyKafkaUtil
 
+## ADS层(数据展示层)
 
+可视化大屏使用Sugar
 
+### GVM(翻页记牌器)
 
+JSON格式：
 
+```json
+{
+	"status": 0,
+	"msg": "",
+	"data": 123456.0000
+}
+```
 
+clichhouse sql语句：
+
+```sql
+select sum(order_amount) from dws_trade_province_order_window where toYYYYMMDD(stt)=20220427;
+```
 
 
 
