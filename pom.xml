@@ -11,6 +11,7 @@
     <modules>
         <module>gmall-realtime</module>
         <module>gmall-publisher</module>
+        <module>gmall-publisher-2022</module>
     </modules>
 
     <properties>
