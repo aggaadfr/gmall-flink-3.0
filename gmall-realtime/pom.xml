@@ -178,12 +178,6 @@
             <version>2012_u6</version>
         </dependency>
 
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-
         <!--工具类-->
         <dependency>
             <groupId>commons-beanutils</groupId>

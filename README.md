@@ -1,6 +1,6 @@
 # 项目说明
 
-大数据项目之电商实时数仓3.0版本
+大数据项目之Flink电商实时数仓-3.0版本
 
 参考giteen地址：https://gitee.com/wh-alex/gmall-211027-flink.git
 
@@ -10,10 +10,12 @@
 
 - maven-3.6.3
 - jdk1.8
-- flink-
-- hbase
-- phoeinx
-- redis
+- flink-1.13.0
+- Flinkcdc-2.1.0
+- hadoop-3.1.3
+- hbase-2.4.0
+- phoeinx-5.0.0
+- redis-3.3.0
 - clickhouse
 - mysql-5.7
 
