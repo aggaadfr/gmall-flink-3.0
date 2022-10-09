@@ -25,8 +25,9 @@
 
 ```
 gmall-flink-3.0
-└── gmall-realtime   					 实时模块
-
+├── gmall-publisher			测试数据可视化接口
+├── gmall-publisher-2022	完成数据可视化接口
+└── gmall-realtime			实时模块
 ```
 
 
